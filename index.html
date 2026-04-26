@@ -130,18 +130,7 @@ main, .page-root { position: relative; z-index: 1; }
 a.link { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--ink-faint); transition: border-color .2s; }
 a.link:hover { border-bottom-color: var(--ink); }
 
-/* Portrait orientation — show rotate prompt, hide content */
-@media (orientation: portrait) {
-  #root { display: none; }
-  #rotate-prompt { display: flex; }
-}
-
-/* Landscape orientation — hide prompt, show content */
-@media (orientation: landscape) {
-  #root { display: block; }
-  #rotate-prompt { display: none; }
-}
-
+/* Rotate prompt base styles — must come BEFORE media queries */
 #rotate-prompt {
   display: none;
   position: fixed;
@@ -175,6 +164,20 @@ a.link:hover { border-bottom-color: var(--ink); }
   0%, 100% { transform: rotate(0deg); }
   40% { transform: rotate(90deg); }
   60% { transform: rotate(90deg); }
+}
+
+/* Portrait — show rotate prompt, hide app */
+@media (orientation: portrait) {
+  #root { display: none !important; }
+  #rotate-prompt { display: flex !important; }
+}
+
+/* Landscape on small screens — scale down to fit without zooming */
+@media (orientation: landscape) and (max-height: 600px) {
+  .hero-grid { padding: 12px 32px 40px !important; gap: 24px !important; }
+  .hero-h1 { font-size: clamp(32px, 6vh, 64px) !important; }
+  .hero-figure { height: 85vh !important; min-height: unset !important; }
+  section { padding-top: 40px !important; padding-bottom: 60px !important; }
 }
   </style>
 
