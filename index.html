@@ -1268,7 +1268,12 @@ function VariantA({ accent = '#ffa45a' }) {
                 filter: 'blur(40px)',
               }} />
               <img ref={heroImgRef} src="assets/hero-figure-v12.png" alt="Rich Dang"
-                style={{ position: 'relative', zIndex: 1, width: '85%', height: 'auto', maxHeight: '80%', objectFit: 'contain', objectPosition: 'center', borderRadius: 24 }} />
+                style={{
+                  position: 'relative', zIndex: 1, width: '85%', height: 'auto', maxHeight: '80%',
+                  objectFit: 'contain', objectPosition: 'center',
+                  WebkitMaskImage: 'radial-gradient(ellipse 72% 78% at 50% 42%, black 38%, transparent 72%)',
+                  maskImage: 'radial-gradient(ellipse 72% 78% at 50% 42%, black 38%, transparent 72%)',
+                }} />
               <Sparkles anchorRef={heroImgRef}
                 region={{ left: 0, top: 0, right: 1, bottom: 0.45 }}
                 excludeRegion={{ left: 0, top: 0.18, right: 0.55, bottom: 0.50 }}
