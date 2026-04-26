@@ -166,9 +166,9 @@ a.link:hover { border-bottom-color: var(--ink); }
   60% { transform: rotate(90deg); }
 }
 
-/* Portrait — show rotate prompt, hide app */
+/* Portrait — show rotate prompt, hide app (keep layout intact so canvases measure correctly) */
 @media (orientation: portrait) {
-  #root { display: none !important; }
+  #root { opacity: 0 !important; pointer-events: none !important; }
   #rotate-prompt { display: flex !important; }
 }
 
