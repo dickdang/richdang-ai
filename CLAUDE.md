@@ -54,9 +54,28 @@ open /Users/richdang/richdang.ai/index.html
 | Sans | Geist / Inter |
 | Mono | JetBrains Mono |
 
+## Hosting
+- **GitHub repo:** https://github.com/dickdang/richdang-ai
+- **Vercel:** https://richdang-ai.vercel.app (auto-deploys on push to `main`)
+- **Domain:** richdang.ca (registered on Cloudflare)
+
+## Cloudflare DNS setup (for Vercel)
+| Type | Name | Content | Proxy |
+|---|---|---|---|
+| A | `@` | `216.198.79.1` | DNS only (grey) |
+| CNAME | `www` | `90455b6d859a547a.vercel-dns-017.com` | DNS only (grey) |
+
+> **Note:** Proxy must be **grey cloud (DNS only)** — orange/proxied breaks Vercel SSL verification.
+> CNAME target is project-specific — check Vercel → Domains → DNS Records tab for the exact value.
+
+## Mobile behaviour
+- **Portrait mode:** Full-screen "rotate device" overlay shown; app hidden via `opacity: 0; pointer-events: none` (NOT `display: none` — see below)
+- **Landscape mode:** Full desktop layout, no special mobile overrides needed
+
 ## Key implementation notes
 - All JSX must be in `<script type="text/babel">` blocks inside `index.html` — external `.jsx` src= doesn't work via file://
 - Sparkles are a canvas animation in `Sparkles` component (stardust.jsx source), cursor-interactive
 - Skill cloud words drift via per-word CSS keyframe animations
 - `FadeUp` uses IntersectionObserver for scroll-reveal
 - `liquid-glass` class uses `backdrop-filter` + a pseudo-element gradient border
+- **NEVER use `display: none` to hide the app root in portrait mode** — canvas elements can't measure their size when hidden this way, causing sparkle particles to initialize at `(0,0)` and appear as amber triangles when the device rotates. Use `opacity: 0; pointer-events: none` instead.

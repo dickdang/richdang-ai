@@ -159,6 +159,33 @@ a.link:hover { border-bottom-color: var(--ink); }
   #about h2 { font-size: clamp(22px, 4vw, 44px) !important; }
   #about p { font-size: 13px !important; line-height: 1.55 !important; }
 }
+
+/* ── Revenue Leak AI ── */
+.rld-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; align-items: start; }
+.rld-card:hover:not([aria-pressed="true"]) {
+  background: rgba(255,255,255,0.055) !important;
+  border-color: rgba(255,255,255,0.18) !important;
+  transform: translateY(-2px);
+}
+.rld-card:focus-visible { outline: 2px solid #ffa45a !important; outline-offset: 3px; }
+.rld-input:focus { border-color: rgba(255,164,90,0.5) !important; background: rgba(255,255,255,0.07) !important; }
+.rld-cta:hover { background: rgba(255,255,255,0.09) !important; }
+.rld-submit:hover { opacity: 0.88 !important; }
+.rld-scanline {
+  position: absolute; left: 0; right: 0; height: 1px; pointer-events: none;
+  background: linear-gradient(90deg, transparent 0%, rgba(255,164,90,0.18) 30%, rgba(255,164,90,0.42) 50%, rgba(255,164,90,0.18) 70%, transparent 100%);
+  animation: rld-scan 6s ease-in-out infinite;
+  z-index: 0;
+}
+@keyframes rld-scan {
+  0%   { top: 4%;  opacity: 0; }
+  8%   { opacity: 1; }
+  92%  { opacity: 0.35; }
+  100% { top: 96%; opacity: 0; }
+}
+@media (orientation: portrait) {
+  .rld-layout { grid-template-columns: 1fr !important; }
+}
   </style>
 
   <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
@@ -543,11 +570,520 @@ function Sparkles({ anchorRef = null, region = { left: 0.32, top: 0, right: 0.98
 window.Sparkles = Sparkles;
   </script>
 
+  <!-- ── revenue leak detector ── -->
+  <script type="text/babel">
+const { FadeUp } = window.__shared;
+const _rldContact = window.__shared.CONTACT;
+
+const RLD_SYMPTOMS = [
+  { id: 'forecast',   label: 'Forecast misses every quarter',                  weight: 18,
+    leaks: ['Forecast governance', 'Stage definitions', 'Inspection cadence'],
+    rec: 'Tighten your forecast operating rhythm before adding more pipeline.' },
+  { id: 'leads',      label: 'Reps complain about lead quality',                weight: 12,
+    leaks: ['Lead scoring', 'Routing logic', 'ICP alignment', 'Feedback loops'],
+    rec: 'Fix lead lifecycle definitions before blaming lead quality.' },
+  { id: 'crm',        label: 'CRM data is messy',                               weight: 12,
+    leaks: ['Data hygiene', 'Field governance', 'Process compliance'],
+    rec: 'Clean the data model before scaling dashboards.' },
+  { id: 'cycle',      label: 'Sales cycle keeps getting longer',                weight: 14,
+    leaks: ['Deal progression', 'Qualification rigor', 'Buyer journey friction'],
+    rec: 'Tighten qualification criteria before optimizing the close process.' },
+  { id: 'blame',      label: 'Marketing and sales blame each other',            weight: 13,
+    leaks: ['Attribution model', 'SLA design', 'Lifecycle definitions'],
+    rec: 'Define revenue ownership before adding more tools.' },
+  { id: 'handoffs',   label: 'Too many manual handoffs',                        weight: 11,
+    leaks: ['Workflow automation', 'Ownership clarity', 'System integration'],
+    rec: 'Automate handoffs before hiring more coordinators.' },
+  { id: 'dashboards', label: "Leaders don't trust the dashboards",              weight: 16,
+    leaks: ['Source-of-truth design', 'Metric definitions', 'Data architecture'],
+    rec: 'Fix the data architecture before rebuilding the dashboards.' },
+  { id: 'pipeline',   label: 'Pipeline looks healthy but revenue still slips',  weight: 17,
+    leaks: ['Pipeline quality signals', 'Conversion analysis', 'Risk detection'],
+    rec: 'Audit pipeline quality signals before accelerating top-of-funnel.' },
+  { id: 'ai',         label: 'AI adoption internally is slow',                  weight: 20,
+    leaks: ['Change management', 'Workflow re-design', 'AI literacy gaps', 'Tool selection misalignment'],
+    rec: 'Start with one high-friction workflow and automate it completely before scaling AI adoption.' },
+];
+
+const RLD_ICONS = {
+  forecast: (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/>
+    </svg>
+  ),
+  leads: (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>
+    </svg>
+  ),
+  crm: (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <ellipse cx="12" cy="5" rx="9" ry="3"/>
+      <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
+      <path d="M3 12c0 1.66 4 3 9 3s9-1.34 9-3"/>
+    </svg>
+  ),
+  cycle: (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+    </svg>
+  ),
+  blame: (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+      <circle cx="9" cy="7" r="4"/>
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+      <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+    </svg>
+  ),
+  handoffs: (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="17 1 21 5 17 9"/>
+      <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+      <polyline points="7 23 3 19 7 15"/>
+      <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+    </svg>
+  ),
+  dashboards: (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+    </svg>
+  ),
+  pipeline: (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>
+    </svg>
+  ),
+  ai: (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
+    </svg>
+  ),
+};
+
+function rldSeverity(score) {
+  if (score <= 25) return { label: 'Low leakage',      color: '#4ade80' };
+  if (score <= 50) return { label: 'Moderate leakage', color: '#fbbf24' };
+  if (score <= 75) return { label: 'High leakage',     color: '#f97316' };
+  return               { label: 'Critical leakage',    color: '#f87171' };
+}
+
+function AnimatedCount({ target }) {
+  const [val, setVal] = React.useState(0);
+  const fromRef = React.useRef(0);
+  React.useEffect(() => {
+    const from = fromRef.current;
+    if (from === target) return;
+    const startTime = performance.now();
+    const duration = 720;
+    let raf;
+    const tick = (now) => {
+      const t = Math.min((now - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - t, 3);
+      const current = Math.round(from + (target - from) * eased);
+      fromRef.current = current;
+      setVal(current);
+      if (t < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [target]);
+  return val;
+}
+
+function RevenueLeakDetector({ accent = '#ffa45a' }) {
+  const [selected, setSelected] = React.useState(new Set());
+  const [comments, setComments] = React.useState({});
+  const [form, setForm] = React.useState({ name: '', phone: '', email: '' });
+  const [submitted, setSubmitted] = React.useState(false);
+  const [sending, setSending] = React.useState(false);
+  const [sendError, setSendError] = React.useState(null);
+
+  const toggle = (id) => {
+    setSelected(prev => {
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
+    });
+    setSubmitted(false);
+  };
+
+  const active = RLD_SYMPTOMS.filter(s => selected.has(s.id));
+  const score = Math.min(100, active.reduce((sum, s) => sum + s.weight, 0));
+  const sev = rldSeverity(score);
+  const sorted = [...active].sort((a, b) => b.weight - a.weight);
+  const top = sorted[0];
+  const leaks = [...new Set(sorted.flatMap(s => s.leaks))];
+  const hasAny = selected.size > 0;
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSending(true);
+    setSendError(null);
+
+    const symptomLines = active.map(s => {
+      const note = comments[s.id] ? `\n      Note: ${comments[s.id]}` : '';
+      return `  • ${s.label}${note}`;
+    }).join('\n') || '  (none)';
+    const leakLines = leaks.map(l => `  • ${l}`).join('\n') || '  (none)';
+
+    const report = [
+      'Revenue Leak AI — Diagnostic Report',
+      '==========================================',
+      `Name:  ${form.name}`,
+      `Phone: ${form.phone || '—'}`,
+      `Email: ${form.email}`,
+      '',
+      `Severity Score: ${score}/100 — ${sev.label}`,
+      '',
+      'Selected Symptoms:',
+      symptomLines,
+      '',
+      'Identified Operational Leaks:',
+      leakLines,
+      '',
+      'Recommended Next Move:',
+      `  ${top ? top.rec : 'N/A'}`,
+      '',
+      '==========================================',
+      'Submitted via richdang.ai / Revenue Leak AI',
+    ].join('\n');
+
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+        body: JSON.stringify({
+          // ⚠️  Replace with your key from web3forms.com
+          access_key: '90944e4d-83f5-4603-82ab-5ebc668daa57',
+          subject: `Revenue Leak AI — ${form.name} (Score: ${score}/100)`,
+          from_name: form.name,
+          replyto: form.email,
+          message: report,
+        }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        setSubmitted(true);
+      } else {
+        setSendError('Submission failed — please email me directly at ' + _rldContact.email);
+      }
+    } catch {
+      setSendError('Network error — please email me directly at ' + _rldContact.email);
+    } finally {
+      setSending(false);
+    }
+  };
+
+  const inputBase = {
+    width: '100%', padding: '11px 14px', borderRadius: 10, fontSize: 13,
+    fontFamily: 'var(--sans)', color: 'var(--ink)',
+    background: 'rgba(255,255,255,0.04)',
+    border: '1px solid rgba(255,255,255,0.1)',
+    outline: 'none',
+  };
+
+  return (
+    <div style={{ maxWidth: 1180, margin: '0 auto' }}>
+
+      {/* Header */}
+      <div style={{ marginBottom: 52 }}>
+        <FadeUp className="eyebrow" style={{ marginBottom: 16 }}>// interactive diagnostic</FadeUp>
+        <FadeUp delay={100} as="h2" style={{
+          fontFamily: 'var(--serif)', fontWeight: 400, margin: '0 0 20px',
+          fontSize: 'clamp(36px, 5.5vw, 72px)', letterSpacing: '-0.02em', lineHeight: 1.05,
+        }}>
+          Revenue Leak <em style={{ color: 'var(--ink-dim)' }}>AI.</em>
+        </FadeUp>
+        <FadeUp delay={200} style={{ fontSize: 17, color: 'var(--ink-dim)', maxWidth: 560, lineHeight: 1.65, margin: 0 }}>
+          Pick the symptoms you're seeing. I'll show you where revenue is probably leaking.
+        </FadeUp>
+      </div>
+
+      {/* Two-column layout */}
+      <div className="rld-layout">
+
+        {/* LEFT — symptom cards */}
+        <FadeUp delay={280}>
+          <div role="group" aria-label="Revenue symptoms"
+               style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }}>
+            {RLD_SYMPTOMS.map((s) => {
+              const isOn = selected.has(s.id);
+              const isAi = s.id === 'ai';
+              return (
+                <div
+                  key={s.id}
+                  role="button"
+                  tabIndex={0}
+                  aria-pressed={isOn}
+                  onClick={() => toggle(s.id)}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(s.id); } }}
+                  className="rld-card"
+                  style={{
+                    textAlign: 'left', cursor: 'pointer', outline: 'none',
+                    background: isOn ? (isAi ? 'rgba(255,164,90,0.13)' : 'rgba(255,164,90,0.09)') : 'rgba(255,255,255,0.03)',
+                    border: isOn ? `1.5px solid ${accent}` : (isAi ? '1.5px solid rgba(255,164,90,0.22)' : '1.5px solid rgba(255,255,255,0.08)'),
+                    borderRadius: 16, padding: '16px 16px 18px',
+                    transition: 'background 0.2s, border-color 0.2s, box-shadow 0.2s, transform 0.18s',
+                    boxShadow: isOn
+                      ? '0 0 22px rgba(255,164,90,0.13), inset 0 1px 0 rgba(255,255,255,0.07)'
+                      : 'inset 0 1px 0 rgba(255,255,255,0.04)',
+                    position: 'relative', backdropFilter: 'blur(6px)',
+                    gridColumn: isAi ? '1 / -1' : undefined,
+                  }}>
+
+                  {/* Check badge */}
+                  <div aria-hidden style={{
+                    position: 'absolute', top: 11, right: 11,
+                    width: 16, height: 16, borderRadius: '50%',
+                    border: `1.5px solid ${isOn ? accent : 'rgba(255,255,255,0.2)'}`,
+                    background: isOn ? accent : 'transparent',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    transition: 'all 0.18s',
+                  }}>
+                    {isOn && (
+                      <svg width="9" height="9" viewBox="0 0 9 9" fill="none">
+                        <path d="M1.5 4.5l2 2L7.5 2" stroke="#061326" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    )}
+                  </div>
+
+                  {/* Icon + label row */}
+                  <div style={{ display: 'flex', alignItems: isAi ? 'center' : 'flex-start', gap: isAi ? 10 : 0, flexDirection: isAi ? 'row' : 'column' }}>
+                    <div style={{ color: isOn ? accent : (isAi ? `rgba(255,164,90,0.55)` : 'rgba(245,240,232,0.38)'), marginBottom: isAi ? 0 : 10, flexShrink: 0, transition: 'color 0.18s' }}>
+                      {RLD_ICONS[s.id]}
+                    </div>
+                    <div style={{
+                      fontSize: isAi ? 13 : 12, fontWeight: 500, lineHeight: 1.45,
+                      paddingRight: isAi ? 28 : 22,
+                      color: isOn ? 'var(--ink)' : 'var(--ink-dim)', transition: 'color 0.18s',
+                    }}>
+                      {s.label}
+                      {isAi && !isOn && (
+                        <span style={{ marginLeft: 8, fontFamily: 'var(--mono)', fontSize: 9, letterSpacing: '0.12em', textTransform: 'uppercase', color: accent, verticalAlign: 'middle', opacity: 0.8 }}>
+                          High impact
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Inline comment textarea — shown when selected */}
+                  {isOn && (
+                    <textarea
+                      onClick={e => e.stopPropagation()}
+                      onKeyDown={e => e.stopPropagation()}
+                      placeholder="Add context — what are you seeing specifically?"
+                      aria-label={`Notes for: ${s.label}`}
+                      value={comments[s.id] || ''}
+                      onChange={e => setComments(c => ({ ...c, [s.id]: e.target.value }))}
+                      rows={2}
+                      style={{
+                        display: 'block', width: '100%', marginTop: 10,
+                        padding: '8px 10px', borderRadius: 8, fontSize: 11,
+                        fontFamily: 'var(--sans)', color: 'var(--ink-dim)',
+                        background: 'rgba(0,0,0,0.25)', border: '1px solid rgba(255,255,255,0.1)',
+                        outline: 'none', resize: 'none', lineHeight: 1.5,
+                        transition: 'border-color 0.18s',
+                      }}
+                    />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </FadeUp>
+
+        {/* RIGHT — diagnostic panel */}
+        <FadeUp delay={420}>
+          <div className="liquid-glass" style={{
+            borderRadius: 24, padding: 32, position: 'relative', overflow: 'hidden',
+            background: 'rgba(6,19,38,0.72)', minHeight: 520,
+          }}>
+            <div className="rld-scanline" aria-hidden />
+            <div style={{ position: 'relative', zIndex: 1 }}>
+
+              {!hasAny ? (
+                /* Default state */
+                <div style={{ display: 'flex', flexDirection: 'column', minHeight: 460, justifyContent: 'center' }}>
+                  <div style={{
+                    width: 44, height: 44, borderRadius: 12, marginBottom: 20,
+                    background: 'rgba(255,164,90,0.08)', border: '1px solid rgba(255,164,90,0.18)',
+                    display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  }}>
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={accent} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+                    </svg>
+                  </div>
+                  <h3 style={{
+                    fontFamily: 'var(--serif)', fontWeight: 400, fontSize: 22,
+                    margin: '0 0 12px', letterSpacing: '-0.01em', lineHeight: 1.3,
+                  }}>
+                    Select a few symptoms to scan your revenue engine.
+                  </h3>
+                  <p style={{ color: 'var(--ink-dim)', fontSize: 14, lineHeight: 1.7, margin: '0 0 28px' }}>
+                    Most GTM issues show up as sales problems, but the root cause usually sits deeper in process, data, tooling, or ownership.
+                  </p>
+                  <div style={{ borderTop: '1px solid var(--ink-faint)', paddingTop: 22, display: 'flex', flexDirection: 'column', gap: 13 }}>
+                    {[
+                      'Process debt compounds quietly.',
+                      'Data gaps create leadership blind spots.',
+                      'Tool sprawl is a symptom, not the cause.',
+                    ].map((line, i) => (
+                      <div key={i} style={{ display: 'flex', gap: 10, fontSize: 13, color: 'var(--ink-mute)', alignItems: 'flex-start' }}>
+                        <span style={{ color: accent, lineHeight: 1.5, flexShrink: 0 }}>—</span>
+                        <span>{line}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                /* Active state */
+                <div>
+
+                  {/* Severity score */}
+                  <div style={{ marginBottom: 26 }}>
+                    <div className="eyebrow" style={{ marginBottom: 10 }}>Leak Severity Score</div>
+                    <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, marginBottom: 13, flexWrap: 'wrap' }}>
+                      <span style={{ fontFamily: 'var(--serif)', fontSize: 60, lineHeight: 1, color: sev.color, transition: 'color 0.4s' }}>
+                        <AnimatedCount target={score} />
+                      </span>
+                      <span style={{ color: 'var(--ink-mute)', fontSize: 14 }}>/100</span>
+                      <span style={{
+                        borderRadius: 999, padding: '4px 11px', fontSize: 10,
+                        fontFamily: 'var(--mono)', letterSpacing: '0.14em', textTransform: 'uppercase',
+                        background: `${sev.color}1a`, color: sev.color,
+                        border: `1px solid ${sev.color}40`, transition: 'all 0.4s',
+                      }}>{sev.label}</span>
+                    </div>
+                    {/* Progress bar */}
+                    <div style={{ height: 5, borderRadius: 999, background: 'rgba(255,255,255,0.07)', overflow: 'hidden' }}>
+                      <div style={{
+                        height: '100%', borderRadius: 999,
+                        background: `linear-gradient(90deg, ${accent}, ${sev.color})`,
+                        width: `${score}%`,
+                        transition: 'width 0.85s cubic-bezier(0.2,0.7,0.3,1), background 0.4s',
+                        boxShadow: `0 0 10px ${sev.color}50`,
+                      }} />
+                    </div>
+                  </div>
+
+                  {/* Operational leaks */}
+                  {leaks.length > 0 && (
+                    <div style={{ marginBottom: 22 }}>
+                      <div className="eyebrow" style={{ marginBottom: 10 }}>Likely Operational Leaks</div>
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 7 }}>
+                        {leaks.map(leak => (
+                          <span key={leak} style={{
+                            padding: '5px 11px', borderRadius: 8, fontSize: 12,
+                            background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.09)',
+                            color: 'var(--ink-dim)',
+                          }}>{leak}</span>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Recommendation */}
+                  {top && (
+                    <div style={{
+                      marginBottom: 24, padding: '14px 16px',
+                      borderLeft: `2px solid ${accent}`,
+                      background: 'linear-gradient(90deg, rgba(255,164,90,0.06) 0%, transparent 80%)',
+                      borderRadius: '0 10px 10px 0',
+                    }}>
+                      <div className="eyebrow" style={{ color: accent, marginBottom: 7 }}>Recommended Next Move</div>
+                      <p style={{ margin: 0, fontSize: 14, lineHeight: 1.65, color: 'var(--ink)' }}>{top.rec}</p>
+                    </div>
+                  )}
+
+                  {/* Lead capture */}
+                  <div style={{ borderTop: '1px solid var(--ink-faint)', paddingTop: 22 }}>
+                    <div className="eyebrow" style={{ marginBottom: 12 }}>Get your full diagnostic sent over</div>
+
+                    {submitted ? (
+                      <div style={{
+                        padding: '16px 18px', borderRadius: 12, fontSize: 13, lineHeight: 1.65,
+                        background: 'rgba(74,222,128,0.07)', border: '1px solid rgba(74,222,128,0.22)',
+                        color: '#4ade80',
+                      }}>
+                        Report sent. I'll follow up directly.
+                      </div>
+                    ) : (
+                      <form onSubmit={handleSubmit}>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: 9, marginBottom: 12 }}>
+                          <input
+                            type="text" required placeholder="Your name" aria-label="Your name"
+                            value={form.name}
+                            onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
+                            className="rld-input"
+                            style={inputBase}
+                          />
+                          <input
+                            type="tel" placeholder="Phone (optional)" aria-label="Phone number (optional)"
+                            value={form.phone}
+                            onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
+                            className="rld-input"
+                            style={inputBase}
+                          />
+                          <input
+                            type="email" required placeholder="Your email" aria-label="Your email address"
+                            value={form.email}
+                            onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
+                            className="rld-input"
+                            style={inputBase}
+                          />
+                        </div>
+                        {sendError && (
+                          <div style={{
+                            marginBottom: 10, padding: '10px 12px', borderRadius: 8, fontSize: 12,
+                            background: 'rgba(248,113,113,0.08)', border: '1px solid rgba(248,113,113,0.25)',
+                            color: '#f87171', lineHeight: 1.5,
+                          }}>{sendError}</div>
+                        )}
+                        <div style={{ display: 'flex', gap: 9 }}>
+                          <button type="submit" disabled={sending} className="rld-submit" style={{
+                            flex: 1, padding: '11px 16px', borderRadius: 10, border: 'none',
+                            background: accent, color: '#061326', fontWeight: 600, fontSize: 13,
+                            fontFamily: 'var(--sans)', cursor: sending ? 'not-allowed' : 'pointer',
+                            opacity: sending ? 0.6 : 1, transition: 'opacity 0.2s',
+                          }}>
+                            {sending ? 'Sending…' : 'Send my report →'}
+                          </button>
+                          <a href={_rldContact.cal} target="_blank" rel="noreferrer"
+                             className="rld-cta"
+                             style={{
+                               flex: 1, padding: '11px 16px', borderRadius: 10, textDecoration: 'none',
+                               background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
+                               color: 'var(--ink)', fontSize: 13, fontFamily: 'var(--sans)', fontWeight: 500,
+                               display: 'flex', alignItems: 'center', justifyContent: 'center',
+                               transition: 'background 0.2s',
+                             }}>
+                            Book a GTM Audit
+                          </a>
+                        </div>
+                      </form>
+                    )}
+                  </div>
+
+                </div>
+              )}
+            </div>
+          </div>
+        </FadeUp>
+      </div>
+    </div>
+  );
+}
+
+window.RevenueLeakDetector = RevenueLeakDetector;
+  </script>
+
   <!-- ── main layout ── -->
   <script type="text/babel">
 const { Icon, FadeUp, Embers, RESUME, CONTACT } = window.__shared;
 const SkillCloud = window.SkillCloud;
 const Sparkles = window.Sparkles;
+const RevenueLeakDetector = window.RevenueLeakDetector;
 
 const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const TIMES = ['9:00','10:30','13:00','15:30'];
@@ -776,6 +1312,12 @@ function VariantA({ accent = '#ffa45a' }) {
           </div>
           <FadeUp delay={200}><SkillCloud accent={accent} /></FadeUp>
         </div>
+      </section>
+
+      {/* ── REVENUE LEAK DETECTOR ── */}
+      <section id="revenue-leak" style={{ padding: '60px 24px 120px', position: 'relative' }}>
+        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.018) 0%, transparent 60%)' }} />
+        <RevenueLeakDetector accent={accent} />
       </section>
 
       {/* ── RESUME ── */}
