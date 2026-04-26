@@ -140,7 +140,7 @@ a.link:hover { border-bottom-color: var(--ink); }
   }
   .hero-grid .eyebrow { justify-content: center !important; }
   .hero-grid > div:first-child > div:last-child { justify-content: center !important; }
-  .hero-figure { height: 62vh !important; min-height: unset !important; }
+  .hero-figure { height: 50vh !important; min-height: unset !important; }
   #about { padding-top: 80px !important; }
   #about h2 { font-size: clamp(30px, 8.5vw, 52px) !important; }
   .resume-grid { grid-template-columns: 1fr !important; gap: 4px !important; padding: 20px 0 !important; }
@@ -1260,15 +1260,15 @@ function VariantA({ accent = '#ffa45a' }) {
             </div>
           </div>
 
-          <div className="hero-figure" style={{ position: 'relative', height: '90vh', minHeight: 620, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', overflow: 'visible' }}>
-            <div style={{ position: 'relative', width: '100%', maxWidth: 720, height: '100%', display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
+          <div className="hero-figure" style={{ position: 'relative', height: '90vh', minHeight: 620, display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'visible' }}>
+            <div style={{ position: 'relative', width: '100%', maxWidth: 640, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <div aria-hidden style={{
-                position: 'absolute', left: 0, right: 0, top: '8%', height: '38%', pointerEvents: 'none', zIndex: 0,
-                background: `radial-gradient(ellipse 55% 60% at 55% 25%, ${accent}40 0%, transparent 65%)`,
+                position: 'absolute', left: 0, right: 0, top: '15%', height: '55%', pointerEvents: 'none', zIndex: 0,
+                background: `radial-gradient(ellipse 60% 60% at 55% 45%, ${accent}38 0%, transparent 65%)`,
                 filter: 'blur(40px)',
               }} />
               <img ref={heroImgRef} src="assets/hero-figure-v12.png" alt="Rich Dang"
-                style={{ position: 'relative', zIndex: 1, width: '100%', height: 'auto', maxHeight: '100%', objectFit: 'contain', objectPosition: 'bottom' }} />
+                style={{ position: 'relative', zIndex: 1, width: '85%', height: 'auto', maxHeight: '80%', objectFit: 'contain', objectPosition: 'center', borderRadius: 24 }} />
               <Sparkles anchorRef={heroImgRef}
                 region={{ left: 0, top: 0, right: 1, bottom: 0.45 }}
                 excludeRegion={{ left: 0, top: 0.18, right: 0.55, bottom: 0.50 }}
