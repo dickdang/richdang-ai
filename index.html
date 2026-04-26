@@ -1,0 +1,844 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Rich Dang — Revenue leader, AI enthusiast, systems builder</title>
+  <meta name="description" content="AI GTM Operator. Revenue leader, AI enthusiast, and systems builder based in Toronto." />
+  <style>
+/* ─── richdang.ai — shared styles ─────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@300;400;500;600&family=Inter+Tight:wght@300;400;500;600&family=Geist:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  --ink: #f5f0e8;
+  --ink-dim: rgba(245, 240, 232, 0.6);
+  --ink-mute: rgba(245, 240, 232, 0.4);
+  --ink-faint: rgba(245, 240, 232, 0.12);
+  --bg: #0A1F3D;
+  --bg-deep: #061326;
+  --bg-elev: #10294A;
+  --warm: #FFC76A;
+  --warm-strong: #F5B14C;
+  --warm-2: #ff8c3a;
+  --serif: 'Instrument Serif', 'Cormorant Garamond', Georgia, serif;
+  --sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --mono: 'JetBrains Mono', 'SF Mono', Menlo, monospace;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; background: var(--bg-deep); color: var(--ink); font-family: var(--sans); -webkit-font-smoothing: antialiased; }
+
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 100% 80% at 50% 50%, transparent 40%, rgba(0,0,0,0.55) 100%),
+    radial-gradient(ellipse 55% 55% at 70% 38%, rgba(16, 41, 74, 0.6) 0%, transparent 65%),
+    linear-gradient(180deg, #0A1F3D 0%, #0A1F3D 35%, #061326 100%);
+}
+
+section, main, footer, nav { position: relative; }
+main, .page-root { position: relative; z-index: 1; }
+
+.liquid-glass {
+  background: rgba(255, 255, 255, 0.015);
+  background-blend-mode: luminosity;
+  backdrop-filter: blur(8px) saturate(1.4);
+  -webkit-backdrop-filter: blur(8px) saturate(1.4);
+  border: none;
+  box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+.liquid-glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.4px;
+  background: linear-gradient(180deg,
+    rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.15) 20%,
+    rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%,
+    rgba(255,255,255,0.15) 80%, rgba(255,255,255,0.45) 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.hero-h1 { font-family: var(--serif); font-weight: 400; letter-spacing: -0.02em; line-height: 0.95; }
+.hero-h1 em { font-style: italic; }
+
+.eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-mute); }
+
+.pill { border-radius: 999px; padding: 10px 22px; font-size: 13px; font-weight: 500; color: var(--ink); cursor: pointer; border: none; transition: background .2s; }
+.pill:hover { background: rgba(255,255,255,0.06); }
+
+.cosmic-bg {
+  position: absolute; inset: 0; overflow: hidden;
+  background:
+    radial-gradient(ellipse 50% 40% at 70% 22%, rgba(245,177,76,0.05) 0%, transparent 65%),
+    radial-gradient(ellipse 55% 55% at 70% 40%, rgba(16,41,74,0.5) 0%, transparent 65%),
+    linear-gradient(180deg, #0A1F3D 0%, #0A1F3D 40%, #061326 100%);
+}
+.cosmic-bg::before {
+  content: '';
+  position: absolute; inset: -10%;
+  background:
+    radial-gradient(circle 1px at 20% 30%, rgba(255,240,220,0.9), transparent 60%),
+    radial-gradient(circle 1px at 70% 65%, rgba(255,240,220,0.7), transparent 60%),
+    radial-gradient(circle 1.5px at 35% 80%, rgba(255,220,180,0.8), transparent 60%),
+    radial-gradient(circle 1px at 85% 25%, rgba(255,240,220,0.6), transparent 60%),
+    radial-gradient(circle 1px at 12% 60%, rgba(255,240,220,0.7), transparent 60%),
+    radial-gradient(circle 1px at 58% 15%, rgba(255,240,220,0.5), transparent 60%),
+    radial-gradient(circle 1.5px at 90% 80%, rgba(255,220,180,0.7), transparent 60%),
+    radial-gradient(circle 1px at 45% 45%, rgba(255,240,220,0.6), transparent 60%),
+    radial-gradient(circle 1px at 25% 90%, rgba(255,240,220,0.5), transparent 60%),
+    radial-gradient(circle 1px at 78% 50%, rgba(255,240,220,0.7), transparent 60%);
+  background-size: 600px 600px; background-repeat: repeat;
+  animation: drift 60s linear infinite; opacity: 0.9;
+}
+.cosmic-bg::after {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 100%, rgba(255,150,80,0.18) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 30% at 50% 90%, rgba(255,200,140,0.10) 0%, transparent 70%);
+  filter: blur(20px); animation: pulse 8s ease-in-out infinite;
+}
+@keyframes drift { from { transform: translate(0,0); } to { transform: translate(-300px,-150px); } }
+@keyframes pulse { 0%, 100% { opacity: 0.7; transform: scale(1); } 50% { opacity: 1; transform: scale(1.05); } }
+
+.embers { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.embers .ember {
+  position: absolute; width: 3px; height: 3px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,200,130,1) 0%, rgba(255,150,80,0.6) 40%, transparent 70%);
+  box-shadow: 0 0 8px rgba(255,180,100,0.8), 0 0 16px rgba(255,150,80,0.4);
+  animation: rise linear infinite; opacity: 0;
+}
+@keyframes rise {
+  0% { transform: translateY(0) translateX(0) scale(0.5); opacity: 0; }
+  10% { opacity: 1; } 90% { opacity: 0.6; }
+  100% { transform: translateY(-100vh) translateX(var(--drift,30px)) scale(1.2); opacity: 0; }
+}
+
+.fade-up { opacity: 0; transform: translateY(28px); transition: opacity .9s cubic-bezier(.2,.7,.3,1), transform .9s cubic-bezier(.2,.7,.3,1); }
+.fade-up.in { opacity: 1; transform: translateY(0); }
+
+a.link { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--ink-faint); transition: border-color .2s; }
+a.link:hover { border-bottom-color: var(--ink); }
+
+@media (max-width: 768px) {
+  .hero-grid { grid-template-columns: 1fr !important; padding: 20px 24px 60px !important; }
+  .hero-figure { display: none !important; }
+  .resume-grid { grid-template-columns: 1fr !important; }
+  .book-grid { grid-template-columns: 1fr !important; }
+  .footer-grid { grid-template-columns: 1fr 1fr !important; }
+}
+  </style>
+
+  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+</head>
+<body>
+  <div id="root"></div>
+
+  <!-- ── shared: icons, hooks, data ── -->
+  <script type="text/babel">
+const Icon = {
+  Mail: ({ size = 20, ...p }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" {...p}>
+      <rect x="3" y="5" width="18" height="14" rx="2" /><path d="m3 7 9 6 9-6" />
+    </svg>
+  ),
+  Github: ({ size = 20, ...p }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" {...p}>
+      <path d="M9 19c-4.3 1.4-4.3-2.5-6-3m12 5v-3.5c0-1 .1-1.4-.5-2 2.8-.3 5.5-1.4 5.5-6a4.6 4.6 0 0 0-1.3-3.2 4.2 4.2 0 0 0-.1-3.2s-1.1-.3-3.5 1.3a12 12 0 0 0-6.2 0C6.5 2.8 5.4 3.1 5.4 3.1a4.2 4.2 0 0 0-.1 3.2A4.6 4.6 0 0 0 4 9.5c0 4.6 2.7 5.7 5.5 6-.6.6-.6 1.2-.5 2V21" />
+    </svg>
+  ),
+  Linkedin: ({ size = 20, ...p }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" {...p}>
+      <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z" />
+      <rect x="2" y="9" width="4" height="12" /><circle cx="4" cy="4" r="2" />
+    </svg>
+  ),
+  Calendar: ({ size = 20, ...p }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" {...p}>
+      <rect x="3" y="4" width="18" height="18" rx="2" /><path d="M16 2v4M8 2v4M3 10h18" />
+    </svg>
+  ),
+  ArrowRight: ({ size = 20, ...p }) => (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" {...p}>
+      <path d="M5 12h14M13 5l7 7-7 7" />
+    </svg>
+  ),
+};
+
+function useInView() {
+  const ref = React.useRef(null);
+  const [seen, setSeen] = React.useState(false);
+  React.useEffect(() => {
+    if (!ref.current) return;
+    const io = new IntersectionObserver(([e]) => {
+      if (e.isIntersecting) { setSeen(true); io.disconnect(); }
+    }, { threshold: 0.15, rootMargin: '-60px' });
+    io.observe(ref.current);
+    return () => io.disconnect();
+  }, []);
+  return [ref, seen];
+}
+
+function FadeUp({ as: Tag = 'div', delay = 0, className = '', children, style, ...rest }) {
+  const [ref, seen] = useInView();
+  return (
+    <Tag ref={ref} className={`fade-up ${seen ? 'in' : ''} ${className}`}
+         style={{ transitionDelay: `${delay}ms`, ...style }} {...rest}>
+      {children}
+    </Tag>
+  );
+}
+
+function Embers({ count = 28 }) {
+  const particles = React.useMemo(() => Array.from({ length: count }, (_, i) => ({
+    left: `${Math.random() * 100}%`, bottom: `${-Math.random() * 20}%`,
+    delay: `${Math.random() * 12}s`, dur: `${10 + Math.random() * 14}s`,
+    drift: `${(Math.random() - 0.5) * 80}px`, scale: 0.4 + Math.random() * 1.2, key: i,
+  })), [count]);
+  return (
+    <div className="embers" aria-hidden>
+      {particles.map(p => (
+        <span key={p.key} className="ember" style={{
+          left: p.left, bottom: p.bottom, animationDelay: p.delay,
+          animationDuration: p.dur, transform: `scale(${p.scale})`, '--drift': p.drift,
+        }} />
+      ))}
+    </div>
+  );
+}
+
+const RESUME = [
+  { year: '2024 — 2026', role: 'Head of Revenue Operations',                   org: 'Plooto' },
+  { year: '2022 — 2024', role: 'Head of Business Ops, Finance & RevOps',       org: 'Briq' },
+  { year: '2022',        role: 'SaaS Sales Consultant',                        org: 'Relay Financial & Opencare' },
+  { year: '2020 — 2022', role: 'VP of Sales',                                  org: 'Notch' },
+  { year: '2018 — 2020', role: 'Program Manager, Sales Strategy & Operations', org: 'Uber Eats' },
+  { year: '2013 — 2018', role: 'Sales Manager',                                org: 'FreshBooks' },
+];
+
+const CONTACT = {
+  email:    'richtdang@gmail.com',
+  linkedin: 'https://www.linkedin.com/in/richdang/',
+  github:   'https://github.com/dickdang',
+  cal:      'https://calendly.com/richdang/30-minute-meeting',
+};
+
+window.__shared = { Icon, useInView, FadeUp, Embers, RESUME, CONTACT };
+  </script>
+
+  <!-- ── skill cloud ── -->
+  <script type="text/babel">
+const { Icon, FadeUp, Embers, RESUME, CONTACT } = window.__shared;
+
+const CLOUD_SKILLS = [
+  { name: 'Salesforce',              tier: 1, level: 'Expert' },
+  { name: 'Claude',                  tier: 1, level: 'Expert' },
+  { name: 'Forecasting',             tier: 1, level: 'Expert' },
+  { name: 'Funnel Optimization',     tier: 1, level: 'Expert' },
+  { name: 'Outreach',                tier: 2, level: 'Expert' },
+  { name: 'SalesLoft',               tier: 2, level: 'Advanced' },
+  { name: 'Gong',                    tier: 2, level: 'Advanced' },
+  { name: 'LeanData',                tier: 2, level: 'Advanced' },
+  { name: 'Databricks',              tier: 2, level: 'Advanced' },
+  { name: 'Budgets & Actuals',       tier: 2, level: 'Expert' },
+  { name: 'Sales Enablement Agents', tier: 2, level: 'Expert' },
+  { name: 'ChatGPT',                 tier: 2, level: 'Advanced' },
+  { name: 'Gemini',                  tier: 2, level: 'Advanced' },
+  { name: 'HubSpot',                 tier: 3, level: 'Intermediate' },
+  { name: 'Momentum',                tier: 3, level: 'Intermediate' },
+  { name: 'RingDNA',                 tier: 3, level: 'Intermediate' },
+  { name: 'Aircall',                 tier: 3, level: 'Advanced' },
+  { name: 'NetSuite',                tier: 3, level: 'Intermediate' },
+  { name: 'QuickBooks Online',       tier: 3, level: 'Intermediate' },
+  { name: 'Web Scraping',            tier: 3, level: 'Advanced' },
+  { name: 'Remotion',                tier: 3, level: 'Intermediate' },
+  { name: 'AWS',                     tier: 3, level: 'Intermediate' },
+];
+
+function rng(seed) { let s = seed * 9301 + 49297; return () => { s = (s * 9301 + 49297) % 233280; return s / 233280; }; }
+
+const POSITIONS = [
+  { x: 22, y: 38 }, { x: 56, y: 30 }, { x: 30, y: 70 }, { x: 72, y: 64 },
+  { x: 10, y: 18 }, { x: 38, y: 14 }, { x: 78, y: 14 }, { x: 92, y: 32 },
+  { x: 8,  y: 58 }, { x: 92, y: 50 }, { x: 50, y: 50 }, { x: 16, y: 84 },
+  { x: 90, y: 80 }, { x: 64, y: 8  }, { x: 5,  y: 38 }, { x: 88, y: 64 },
+  { x: 60, y: 88 }, { x: 38, y: 92 }, { x: 76, y: 44 }, { x: 4,  y: 76 },
+  { x: 50, y: 70 }, { x: 22, y: 56 },
+];
+
+const TIER_STYLE = {
+  1: { size: 56, weight: 600, opacity: 1.00 },
+  2: { size: 36, weight: 600, opacity: 0.95 },
+  3: { size: 24, weight: 500, opacity: 0.80 },
+};
+
+function SkillCloud({ accent = '#ffa45a' }) {
+  const [hoverIdx, setHoverIdx] = React.useState(null);
+  return (
+    <div className="liquid-glass" style={{
+      borderRadius: 28, position: 'relative', overflow: 'hidden',
+      background: '#0a0810', aspectRatio: '16 / 9', minHeight: 480,
+    }}>
+      <div className="binary-rain" aria-hidden />
+      <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none',
+        background: `radial-gradient(ellipse 60% 50% at 50% 60%, ${accent}18 0%, transparent 65%)` }} />
+      {CLOUD_SKILLS.map((s, i) => {
+        const pos = POSITIONS[i] || { x: 50, y: 50 };
+        const tier = TIER_STYLE[s.tier] || TIER_STYLE[3];
+        const r = rng(i + 1);
+        const dur = 14 + r() * 14;
+        const delay = -(r() * 20);
+        const dxA = (r() - 0.5) * 22;
+        const dyA = (r() - 0.5) * 22;
+        const rotA = (r() - 0.5) * 4;
+        const isHover = hoverIdx === i;
+        return (
+          <span key={s.name}
+            onMouseEnter={() => setHoverIdx(i)}
+            onMouseLeave={() => setHoverIdx(h => h === i ? null : h)}
+            style={{
+              position: 'absolute', left: `${pos.x}%`, top: `${pos.y}%`,
+              transform: 'translate(-50%,-50%)', fontFamily: 'var(--sans)',
+              fontSize: tier.size, fontWeight: tier.weight, letterSpacing: '-0.01em',
+              color: isHover ? accent : `rgba(245,240,232,${tier.opacity})`,
+              textShadow: isHover ? `0 0 24px ${accent}66` : 'none',
+              cursor: 'default', whiteSpace: 'nowrap',
+              transition: 'color .18s, text-shadow .18s',
+              animation: `cd${i} ${dur}s ease-in-out ${delay}s infinite alternate`,
+              zIndex: isHover ? 20 : s.tier === 1 ? 4 : s.tier === 2 ? 3 : 2,
+            }}>
+            <style>{`@keyframes cd${i}{0%{translate:0 0;rotate:0deg}100%{translate:${dxA}px ${dyA}px;rotate:${rotA}deg}}`}</style>
+            {s.name}
+            {isHover && (
+              <span style={{
+                position: 'absolute', bottom: 'calc(100% + 8px)', left: '50%',
+                transform: 'translateX(-50%)', fontFamily: 'var(--mono)', fontSize: 10,
+                letterSpacing: '0.16em', textTransform: 'uppercase', color: accent,
+                background: 'rgba(8,6,12,0.85)', border: `1px solid ${accent}`,
+                borderRadius: 999, padding: '5px 12px', whiteSpace: 'nowrap',
+                boxShadow: `0 0 20px ${accent}30`,
+              }}>{s.level}</span>
+            )}
+          </span>
+        );
+      })}
+      <style>{`
+        .binary-rain{position:absolute;inset:0;pointer-events:none;font-family:'JetBrains Mono',monospace;font-size:12px;color:rgba(245,240,232,0.04);overflow:hidden;letter-spacing:0.15em}
+        .binary-rain::before,.binary-rain::after{content:"01001 10110 11010 01101 11001 00101 10011 01110 11001 00110 10110 01001 11010 00101 10011 01110 11001 00110 10110 01001 11010";position:absolute;left:0;top:0;width:100%;word-break:break-all;line-height:1.8;writing-mode:vertical-rl;height:200%;animation:rain 28s linear infinite}
+        .binary-rain::after{left:50%;animation-duration:36s;animation-delay:-10s;color:rgba(245,240,232,0.025)}
+        @keyframes rain{from{transform:translateY(-50%)}to{transform:translateY(0%)}}
+      `}</style>
+    </div>
+  );
+}
+
+window.SkillCloud = SkillCloud;
+  </script>
+
+  <!-- ── sparkles canvas ── -->
+  <script type="text/babel">
+const { useEffect, useRef } = React;
+
+function Sparkles({ anchorRef = null, region = { left: 0.32, top: 0, right: 0.98, bottom: 0.28 },
+  excludeRegion = null, count = 70, cursorRadius = 140, cursorStrength = 1.6, className, style }) {
+  const canvasRef = useRef(null);
+  const rafRef = useRef(0);
+  const particlesRef = useRef([]);
+  const cursorRef = useRef({ x: -9999, y: -9999, active: false });
+  const regionRef = useRef({ x: 0, y: 0, w: 0, h: 0 });
+  const excludeRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let W = 0, H = 0;
+    const DPR = Math.min(window.devicePixelRatio || 1, 2);
+
+    const computeRegion = () => {
+      const cr = canvas.getBoundingClientRect();
+      const ar = anchorRef?.current?.getBoundingClientRect();
+      const base = ar && ar.width > 0 && ar.height > 0
+        ? { x: ar.left - cr.left, y: ar.top - cr.top, w: ar.width, h: ar.height }
+        : { x: 0, y: 0, w: W, h: H };
+      regionRef.current = {
+        x: base.x + region.left * base.w, y: base.y + region.top * base.h,
+        w: (region.right - region.left) * base.w, h: (region.bottom - region.top) * base.h,
+      };
+      excludeRef.current = excludeRegion ? {
+        x: base.x + excludeRegion.left * base.w, y: base.y + excludeRegion.top * base.h,
+        w: (excludeRegion.right - excludeRegion.left) * base.w,
+        h: (excludeRegion.bottom - excludeRegion.top) * base.h,
+      } : null;
+    };
+
+    const inExclude = (x, y) => {
+      const e = excludeRef.current;
+      return e ? x >= e.x && x <= e.x + e.w && y >= e.y && y <= e.y + e.h : false;
+    };
+
+    const initParticles = () => {
+      const ps = [], r = regionRef.current;
+      for (let i = 0; i < count; i++) {
+        let x, y, attempts = 0;
+        do {
+          x = r.x + Math.pow(Math.random(), 0.6) * r.w;
+          y = r.y + Math.pow(Math.random(), 1.2) * r.h;
+        } while (inExclude(x, y) && ++attempts < 12);
+        ps.push({ hx: x, hy: y, x, y, vx: 0, vy: 0,
+          size: 0.8 + Math.pow(Math.random(), 3) * 4.2,
+          phase: Math.random() * Math.PI * 2, phaseSpeed: 0.6 + Math.random() * 1.4,
+          tint: Math.random(), seed: Math.random() * 1000 });
+      }
+      particlesRef.current = ps;
+    };
+
+    const resize = () => {
+      const r = canvas.getBoundingClientRect();
+      W = r.width; H = r.height;
+      canvas.width = (W * DPR) | 0; canvas.height = (H * DPR) | 0;
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+      computeRegion();
+      if (!particlesRef.current.length) initParticles();
+    };
+    resize();
+    initParticles();
+
+    const ro = new ResizeObserver(resize);
+    ro.observe(canvas);
+    if (anchorRef?.current) ro.observe(anchorRef.current);
+
+    const onMove = e => { const cr = canvas.getBoundingClientRect(); cursorRef.current = { x: e.clientX - cr.left, y: e.clientY - cr.top, active: true }; };
+    const onLeave = () => { cursorRef.current.active = false; };
+    canvas.addEventListener('pointermove', onMove);
+    canvas.addEventListener('pointerleave', onLeave);
+
+    let last = performance.now();
+    const tick = now => {
+      const dt = Math.min(48, now - last); last = now;
+      const t = now / 1000;
+      ctx.clearRect(0, 0, W, H);
+      ctx.globalCompositeOperation = 'lighter';
+      const ps = particlesRef.current, cur = cursorRef.current, cR2 = cursorRadius * cursorRadius;
+
+      for (let i = 0; i < ps.length; i++) {
+        const p = ps[i];
+        const tx = p.hx + Math.sin(t * 0.5 + p.seed) * 6;
+        const ty = p.hy + Math.cos(t * 0.4 + p.seed * 1.2) * 4;
+        let ax = (tx - p.x) * 0.012, ay = (ty - p.y) * 0.012;
+
+        if (cur.active) {
+          const dx = p.x - cur.x, dy = p.y - cur.y, d2 = dx*dx + dy*dy;
+          if (d2 < cR2 && d2 > 1) {
+            const d = Math.sqrt(d2), fall = 1 - d / cursorRadius, force = fall*fall*cursorStrength;
+            ax += dx/d*force; ay += dy/d*force;
+          }
+        }
+
+        const ex = excludeRef.current;
+        if (ex) {
+          const inside = p.x >= ex.x && p.x <= ex.x+ex.w && p.y >= ex.y && p.y <= ex.y+ex.h;
+          if (inside) {
+            const dL = p.x-ex.x, dR = ex.x+ex.w-p.x, dT = p.y-ex.y, dB = ex.y+ex.h-p.y;
+            const m = Math.min(dL,dR,dT,dB);
+            if (m===dL) ax-=1.6; else if (m===dR) ax+=1.6; else if (m===dT) ay-=1.6; else ay+=1.6;
+          }
+        }
+
+        p.vx = (p.vx + ax) * 0.92; p.vy = (p.vy + ay) * 0.92;
+        p.x += p.vx * (dt/16); p.y += p.vy * (dt/16);
+        p.phase += p.phaseSpeed * dt / 1000;
+        const twinkle = 0.55 + 0.45 * Math.sin(p.phase);
+
+        if (ex && p.x>=ex.x && p.x<=ex.x+ex.w && p.y>=ex.y && p.y<=ex.y+ex.h) continue;
+
+        const g = 220 + 30*(1-p.tint), b = 130 + 80*(1-p.tint), alpha = twinkle * 0.95;
+        const haloR = p.size * 4.5;
+        const grd = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, haloR);
+        grd.addColorStop(0, `rgba(255,${g|0},${b|0},${alpha*0.6})`);
+        grd.addColorStop(0.4, `rgba(255,${(g*.85)|0},${(b*.65)|0},${alpha*0.18})`);
+        grd.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(p.x, p.y, haloR, 0, Math.PI*2); ctx.fill();
+        ctx.fillStyle = `rgba(255,${Math.min(255,(g+25))|0},${b|0},${Math.min(1,alpha*1.4)})`;
+        ctx.beginPath(); ctx.arc(p.x, p.y, Math.max(0.6, p.size*0.65), 0, Math.PI*2); ctx.fill();
+
+        if (p.size > 2.4) {
+          const flare = p.size * 6 * twinkle;
+          ctx.strokeStyle = `rgba(255,235,180,${alpha*0.45})`; ctx.lineWidth = 0.6;
+          ctx.beginPath();
+          ctx.moveTo(p.x-flare, p.y); ctx.lineTo(p.x+flare, p.y);
+          ctx.moveTo(p.x, p.y-flare); ctx.lineTo(p.x, p.y+flare);
+          ctx.stroke();
+        }
+      }
+      rafRef.current = requestAnimationFrame(tick);
+    };
+    rafRef.current = requestAnimationFrame(tick);
+
+    return () => {
+      cancelAnimationFrame(rafRef.current); ro.disconnect();
+      canvas.removeEventListener('pointermove', onMove);
+      canvas.removeEventListener('pointerleave', onLeave);
+    };
+  }, [anchorRef, region.left, region.top, region.right, region.bottom, count, cursorRadius, cursorStrength,
+      excludeRegion?.left, excludeRegion?.top, excludeRegion?.right, excludeRegion?.bottom]);
+
+  return (
+    <canvas ref={canvasRef} className={className}
+      style={{ position: 'absolute', inset: 0, width: '100%', height: '100%',
+               pointerEvents: 'auto', filter: 'blur(0.3px) saturate(1.1)', ...style }} />
+  );
+}
+
+window.Sparkles = Sparkles;
+  </script>
+
+  <!-- ── main layout ── -->
+  <script type="text/babel">
+const { Icon, FadeUp, Embers, RESUME, CONTACT } = window.__shared;
+const SkillCloud = window.SkillCloud;
+const Sparkles = window.Sparkles;
+
+const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const TIMES = ['9:00','10:30','13:00','15:30'];
+
+function CalendarPicker({ accent, calUrl }) {
+  const today = new Date();
+  const [year, setYear]     = React.useState(today.getFullYear());
+  const [month, setMonth]   = React.useState(today.getMonth());
+  const [selDay, setSelDay] = React.useState(null);
+  const [selTime, setSelTime] = React.useState(null);
+
+  const prevMonth = () => {
+    if (month === 0) { setMonth(11); setYear(y => y - 1); }
+    else setMonth(m => m - 1);
+    setSelDay(null); setSelTime(null);
+  };
+  const nextMonth = () => {
+    if (month === 11) { setMonth(0); setYear(y => y + 1); }
+    else setMonth(m => m + 1);
+    setSelDay(null); setSelTime(null);
+  };
+
+  // First weekday of month (0=Mon … 6=Sun, JS gives 0=Sun so adjust)
+  const firstDow = (new Date(year, month, 1).getDay() + 6) % 7;
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const isCurrentMonth = year === today.getFullYear() && month === today.getMonth();
+
+  const isBookable = (day) => {
+    if (isCurrentMonth && day <= today.getDate()) return false;
+    const dow = new Date(year, month, day).getDay();
+    // Available Mon (1), Wed (3), Fri (5) only
+    return dow === 1 || dow === 3 || dow === 5;
+  };
+
+  const cells = [];
+  for (let i = 0; i < firstDow; i++) cells.push(null);
+  for (let d = 1; d <= daysInMonth; d++) cells.push(d);
+
+  return (
+    <div style={{ position: 'relative' }}>
+      <div className="liquid-glass" style={{ borderRadius: 22, padding: 28 }}>
+        {/* Month header */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+          <span style={{ fontFamily: 'var(--serif)', fontSize: 22 }}>{MONTH_NAMES[month]} {year}</span>
+          <span style={{ display: 'flex', gap: 6 }}>
+            <button onClick={prevMonth} className="liquid-glass"
+              style={{ width: 28, height: 28, borderRadius: 999, color: 'var(--ink)', cursor: 'pointer', border: 'none', fontSize: 16 }}>‹</button>
+            <button onClick={nextMonth} className="liquid-glass"
+              style={{ width: 28, height: 28, borderRadius: 999, color: 'var(--ink)', cursor: 'pointer', border: 'none', fontSize: 16 }}>›</button>
+          </span>
+        </div>
+
+        {/* Day-of-week headers */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7, 1fr)', gap: 4, fontSize: 12 }}>
+          {['M','T','W','T','F','S','S'].map((d, i) => (
+            <div key={i} style={{ textAlign: 'center', color: 'var(--ink-mute)', padding: '6px 0' }}>{d}</div>
+          ))}
+
+          {/* Day cells */}
+          {cells.map((day, i) => {
+            if (!day) return <div key={`e${i}`} />;
+            const bookable = isBookable(day);
+            const selected = selDay === day;
+            return (
+              <div key={day}
+                onClick={() => bookable && (setSelDay(day), setSelTime(null))}
+                style={{
+                  textAlign: 'center', padding: '8px 0', borderRadius: 8,
+                  cursor: bookable ? 'pointer' : 'default',
+                  color: bookable ? 'var(--ink)' : 'var(--ink-mute)',
+                  background: selected ? `${accent}25` : bookable ? 'rgba(255,255,255,0.03)' : 'transparent',
+                  border: selected ? `1px solid ${accent}` : '1px solid transparent',
+                  fontVariantNumeric: 'tabular-nums',
+                  transition: 'background .15s, border-color .15s',
+                }}>{day}</div>
+            );
+          })}
+        </div>
+
+        {/* Time slots — only shown after a date is picked */}
+        {selDay && (
+          <div style={{ marginTop: 18, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+            {TIMES.map(t => {
+              const active = selTime === t;
+              return (
+                <button key={t} onClick={() => setSelTime(t)}
+                  style={{
+                    borderRadius: 999, padding: '8px 14px', fontSize: 12,
+                    fontFamily: 'var(--mono)', cursor: 'pointer', border: 'none',
+                    color: active ? '#0a0810' : 'var(--ink)',
+                    background: active ? accent : 'rgba(255,255,255,0.06)',
+                    transition: 'background .15s, color .15s',
+                  }}>{t}</button>
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {(() => {
+        const mm = String(month + 1).padStart(2, '0');
+        const dd = String(selDay).padStart(2, '0');
+        const dateStr = selDay ? `${year}-${mm}-${dd}` : '';
+        const href = selDay
+          ? `${calUrl}?month=${year}-${mm}&date=${dateStr}`
+          : calUrl;
+        return (
+          <a href={href} target="_blank" rel="noreferrer" className="liquid-glass pill"
+            style={{
+              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
+              marginTop: 14, width: '100%', textDecoration: 'none',
+              opacity: selDay ? 1 : 0.5,
+              transition: 'opacity .2s',
+            }}>
+            {selDay
+              ? `Check availability for ${MONTH_NAMES[month].slice(0,3)} ${selDay}`
+              : 'Pick a date above'}
+            <Icon.ArrowRight size={14} />
+          </a>
+        );
+      })()}
+    </div>
+  );
+}
+
+function VariantA({ accent = '#ffa45a' }) {
+  const heroImgRef = React.useRef(null);
+  const heroSectionRef = React.useRef(null);
+
+  return (
+    <div className="page-root" style={{ background: 'transparent', color: 'var(--ink)', minHeight: '100%', position: 'relative', zIndex: 1 }}>
+
+      {/* ── HERO ── */}
+      <section ref={heroSectionRef} style={{ position: 'relative', minHeight: '100vh', overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+        <div className="cosmic-bg" />
+        <Embers count={32} />
+        <Sparkles anchorRef={heroSectionRef}
+          region={{ left: 0, top: 0.06, right: 1, bottom: 0.30 }}
+          count={90} cursorRadius={180} cursorStrength={2.2}
+          style={{ zIndex: 5, mixBlendMode: 'screen' }} />
+
+        <div className="hero-grid" style={{
+          position: 'relative', zIndex: 10, flex: 1,
+          display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: 48, alignItems: 'center',
+          padding: '20px 64px 80px', maxWidth: 1280, margin: '0 auto', width: '100%',
+        }}>
+          <div>
+            <div className="eyebrow" style={{ marginBottom: 20, display: 'flex', alignItems: 'center', gap: 10, flexWrap: 'wrap' }}>
+              <span style={{ width: 6, height: 6, borderRadius: 999, background: accent, boxShadow: `0 0 8px ${accent}`, display: 'inline-block' }} />
+              <span>LOCATION:</span>
+              <span style={{ color: 'var(--ink-dim)' }}>Toronto, Ontario · Canada</span>
+            </div>
+            <h1 className="hero-h1" style={{ fontSize: 'clamp(56px, 7.5vw, 120px)', margin: 0, lineHeight: 1.05, paddingBottom: '0.12em' }}>
+              Rich <em>Dang</em>
+            </h1>
+            <p style={{ maxWidth: 520, margin: '28px 0 0', fontSize: 18, lineHeight: 1.6, color: 'var(--ink-dim)' }}>
+              Revenue leader, AI enthusiast, and systems builder. I turn intuition,
+              data, and automation into scalable growth engines.
+            </p>
+            <div style={{ marginTop: 32, display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+              {[
+                { icon: <Icon.Mail />,     href: `mailto:${CONTACT.email}`, label: 'Email',    external: true },
+                { icon: <Icon.Linkedin />, href: CONTACT.linkedin,          label: 'LinkedIn',  external: true },
+                { icon: <Icon.Github />,   href: CONTACT.github,            label: 'GitHub',    external: true },
+                { icon: <Icon.Calendar />, href: '#book',                   label: 'Book',      external: false },
+              ].map(s => (
+                <a key={s.label} href={s.href}
+                   {...(s.external ? { target: '_blank', rel: 'noreferrer' } : {})}
+                   aria-label={s.label} className="liquid-glass"
+                   style={{ borderRadius: 999, padding: 14, color: 'var(--ink-dim)', display: 'inline-flex' }}>
+                  {s.icon}
+                </a>
+              ))}
+            </div>
+          </div>
+
+          <div className="hero-figure" style={{ position: 'relative', height: '90vh', minHeight: 620, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', overflow: 'visible' }}>
+            <div style={{ position: 'relative', width: '100%', maxWidth: 720, height: '100%', display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
+              <div aria-hidden style={{
+                position: 'absolute', left: 0, right: 0, top: '8%', height: '38%', pointerEvents: 'none', zIndex: 0,
+                background: `radial-gradient(ellipse 55% 60% at 55% 25%, ${accent}40 0%, transparent 65%)`,
+                filter: 'blur(40px)',
+              }} />
+              <img ref={heroImgRef} src="assets/hero-figure-v9.png" alt="Rich Dang"
+                style={{ position: 'relative', zIndex: 1, width: '100%', height: 'auto', maxHeight: '100%', objectFit: 'contain', objectPosition: 'bottom' }} />
+              <Sparkles anchorRef={heroImgRef}
+                region={{ left: 0, top: 0, right: 1, bottom: 0.45 }}
+                excludeRegion={{ left: 0, top: 0.18, right: 0.55, bottom: 0.50 }}
+                count={70} cursorRadius={170} cursorStrength={2.0}
+                style={{ zIndex: 2, mixBlendMode: 'screen' }} />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── ABOUT ── */}
+      <section id="about" style={{ padding: '180px 24px 60px', position: 'relative', overflow: 'hidden', background: 'radial-gradient(ellipse at top, rgba(255,255,255,0.025) 0%, transparent 60%)' }}>
+        <div style={{ maxWidth: 1080, margin: '0 auto' }}>
+          <FadeUp className="eyebrow">The New Growth Playbook Era</FadeUp>
+          <FadeUp delay={120} as="h2" style={{ fontFamily: 'var(--serif)', fontWeight: 400, fontSize: 'clamp(40px, 6.5vw, 88px)', lineHeight: 1.05, letterSpacing: '-0.02em', margin: '24px 0 0' }}>
+            Most companies don't have a<br/>
+            <em style={{ color: 'var(--ink-dim)' }}>sales</em> problem. They have an<br/>
+            <em style={{ color: 'var(--ink-dim)' }}>operational</em> one.
+          </FadeUp>
+          <FadeUp delay={260} style={{ maxWidth: 640, marginTop: 48, fontSize: 17, lineHeight: 1.7, color: 'var(--ink-dim)', display: 'flex', flexDirection: 'column', gap: 18 }}>
+            <p style={{ margin: 0 }}>Broken systems create bad behaviors: inaccurate forecasts, wasted pipeline, bloated teams, and leaders making decisions on incomplete data.</p>
+            <p style={{ margin: 0 }}>I've worked across sales, finance, and revenue operations long enough to see the pattern.</p>
+            <p style={{ margin: 0 }}>The next generation of companies won't win by hiring more people. They'll win by <span style={{ color: 'var(--ink)' }}>building smarter systems</span>.</p>
+            <p style={{ margin: 0 }}>I'm obsessed with helping companies scale revenue through operational discipline, AI workflows, and automation that creates leverage—not complexity.</p>
+          </FadeUp>
+          <FadeUp delay={400} style={{ marginTop: 36, fontFamily: 'var(--serif)', fontStyle: 'italic', fontSize: 'clamp(22px, 2.4vw, 30px)', lineHeight: 1.4, letterSpacing: '-0.01em' }}>
+            Build lean. Move fast. <span style={{ color: 'var(--warm)' }}>Remove friction.</span>
+          </FadeUp>
+        </div>
+      </section>
+
+      {/* ── SKILL CLOUD ── */}
+      <section id="skills" style={{ padding: '60px 24px 120px', position: 'relative' }}>
+        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none', background: 'radial-gradient(ellipse at center, rgba(255,255,255,0.02) 0%, transparent 60%)' }} />
+        <div style={{ maxWidth: 1180, margin: '0 auto', position: 'relative' }}>
+          <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap', marginBottom: 40 }}>
+            <FadeUp as="h2" style={{ fontFamily: 'var(--serif)', fontWeight: 400, fontSize: 'clamp(36px, 5.5vw, 72px)', letterSpacing: '-0.02em', margin: 0, lineHeight: 1.05 }}>
+              <em style={{ color: 'var(--ink-dim)' }}>The </em>workbench.
+            </FadeUp>
+            <FadeUp delay={120} className="eyebrow">// skill cloud · hover for proficiency</FadeUp>
+          </div>
+          <FadeUp delay={200}><SkillCloud accent={accent} /></FadeUp>
+        </div>
+      </section>
+
+      {/* ── RESUME ── */}
+      <section id="resume" style={{ padding: '60px 24px 120px' }}>
+        <div style={{ maxWidth: 1080, margin: '0 auto' }}>
+          <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: 24, flexWrap: 'wrap', marginBottom: 64 }}>
+            <FadeUp as="h2" style={{ fontFamily: 'var(--serif)', fontWeight: 400, fontSize: 'clamp(36px, 5.5vw, 72px)', letterSpacing: '-0.02em', margin: 0, lineHeight: 1.05 }}>
+              <em style={{ color: 'var(--ink-dim)' }}>A short </em>résumé.
+            </FadeUp>
+            <FadeUp delay={100} className="eyebrow">Selected roles</FadeUp>
+          </div>
+          <div>
+            {RESUME.map((r, i) => (
+              <FadeUp key={i} delay={i * 80} className="resume-grid" style={{
+                display: 'grid', gridTemplateColumns: '180px 1fr auto', gap: 24,
+                padding: '24px 0', borderTop: '1px solid var(--ink-faint)', alignItems: 'baseline',
+              }}>
+                <span className="eyebrow">{r.year}</span>
+                <div style={{ fontFamily: 'var(--serif)', fontSize: 30, lineHeight: 1.15, letterSpacing: '-0.01em' }}>
+                  {r.role}<span style={{ color: 'var(--ink-mute)' }}> · {r.org}</span>
+                </div>
+                <span style={{ fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--ink-mute)', letterSpacing: '0.1em' }}>0{i+1}</span>
+              </FadeUp>
+            ))}
+            <div style={{ borderTop: '1px solid var(--ink-faint)' }} />
+          </div>
+        </div>
+      </section>
+
+      {/* ── BOOK ── */}
+      <section id="book" style={{ padding: '60px 24px 100px' }}>
+        <div style={{ maxWidth: 1080, margin: '0 auto' }}>
+          <FadeUp className="liquid-glass book-grid" style={{
+            borderRadius: 32, padding: 'clamp(32px, 5vw, 72px)',
+            display: 'grid', gridTemplateColumns: '1.2fr 1fr', gap: 48, alignItems: 'center',
+            position: 'relative', overflow: 'hidden',
+          }}>
+            <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none',
+              background: `radial-gradient(ellipse 80% 60% at 100% 100%, ${accent}30 0%, transparent 60%)` }} />
+            <div style={{ position: 'relative' }}>
+              <div className="eyebrow" style={{ marginBottom: 16 }}>Let's connect</div>
+              <h2 style={{ fontFamily: 'var(--serif)', fontWeight: 400, fontSize: 'clamp(36px, 5vw, 64px)', letterSpacing: '-0.02em', margin: 0, lineHeight: 1.05 }}>
+                Let's <em style={{ color: 'var(--ink-dim)' }}>connect</em>.
+              </h2>
+              <p style={{ margin: '24px 0 0', color: 'var(--ink-dim)', fontSize: 16, lineHeight: 1.7, maxWidth: 520 }}>
+                I enjoy meeting ambitious people and learning what they're building.
+              </p>
+              <p style={{ margin: '14px 0 0', color: 'var(--ink-dim)', fontSize: 15, lineHeight: 1.7, maxWidth: 520 }}>
+                Whether you're a new graduate looking for career advice, a company scaling its revenue engine, or a CEO exploring AI-driven GTM efficiency — I'm always open to meaningful conversations.
+              </p>
+              <div style={{ marginTop: 28, padding: '18px 22px', borderLeft: `2px solid ${accent}`, background: `linear-gradient(90deg, ${accent}10 0%, transparent 80%)`, borderRadius: '0 12px 12px 0', fontSize: 14, lineHeight: 1.65, color: 'var(--ink-dim)', maxWidth: 520 }}>
+                <span style={{ color: 'var(--ink)', fontWeight: 500 }}>One small ask:</span>{' '}
+                if you're reaching out to sell me software, please consider donating to{' '}
+                <a href="https://donate.sunnybrook.ca" target="_blank" rel="noreferrer" className="link" style={{ color: accent, fontWeight: 500 }}>
+                  Sunnybrook Health Sciences Centre
+                </a>{' '}cancer research first.
+              </div>
+            </div>
+            <CalendarPicker accent={accent} calUrl={CONTACT.cal} />
+          </FadeUp>
+        </div>
+      </section>
+
+      {/* ── FOOTER ── */}
+      <section id="contact" style={{ padding: '80px 24px 60px', borderTop: '1px solid var(--ink-faint)', position: 'relative' }}>
+        <div style={{ maxWidth: 1180, margin: '0 auto' }}>
+          <div className="footer-grid" style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr 1fr 1fr', gap: 40, alignItems: 'flex-start' }}>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
+                <span style={{ width: 24, height: 24, borderRadius: 999, background: `radial-gradient(circle at 30% 30%, ${accent}, #6b3a1f 70%)`, boxShadow: `0 0 12px ${accent}80` }} />
+                <span style={{ fontWeight: 600, fontSize: 16 }}>richdang.ai</span>
+              </div>
+              <p style={{ color: 'var(--ink-mute)', fontSize: 13, lineHeight: 1.6, maxWidth: 320, margin: 0 }}>
+                AI GTM operator. Currently shipping agents, pipelines, and revenue systems from the warm side of the country.
+              </p>
+            </div>
+            <div>
+              <div className="eyebrow" style={{ marginBottom: 14 }}>Contact</div>
+              <a className="link" href={`mailto:${CONTACT.email}`} style={{ display: 'block', fontSize: 14, marginBottom: 8 }}>{CONTACT.email}</a>
+            </div>
+            <div>
+              <div className="eyebrow" style={{ marginBottom: 14 }}>Social</div>
+              <a className="link" href={CONTACT.linkedin} target="_blank" rel="noreferrer" style={{ display: 'block', fontSize: 14, marginBottom: 8 }}>LinkedIn</a>
+              <a className="link" href={CONTACT.github}   target="_blank" rel="noreferrer" style={{ display: 'block', fontSize: 14 }}>GitHub</a>
+            </div>
+            <div>
+              <div className="eyebrow" style={{ marginBottom: 14 }}>Site</div>
+              <a className="link" href="#skills" style={{ display: 'block', fontSize: 14, marginBottom: 8 }}>Skills</a>
+              <a className="link" href="#resume" style={{ display: 'block', fontSize: 14, marginBottom: 8 }}>Résumé</a>
+              <a className="link" href="#book"   style={{ display: 'block', fontSize: 14 }}>Book a meeting</a>
+            </div>
+          </div>
+          <div style={{ marginTop: 60, paddingTop: 24, borderTop: '1px solid var(--ink-faint)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontFamily: 'var(--mono)', fontSize: 11, color: 'var(--ink-mute)', letterSpacing: '0.05em', flexWrap: 'wrap', gap: 8 }}>
+            <span>© 2026 RICH DANG</span>
+            <span>BUILT WITH CLAUDE · TYPESET IN INSTRUMENT SERIF</span>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<VariantA accent="#ffa45a" />);
+  </script>
+</body>
+</html>
