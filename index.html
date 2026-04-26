@@ -130,12 +130,51 @@ main, .page-root { position: relative; z-index: 1; }
 a.link { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--ink-faint); transition: border-color .2s; }
 a.link:hover { border-bottom-color: var(--ink); }
 
-@media (max-width: 768px) {
-  .hero-grid { grid-template-columns: 1fr !important; padding: 20px 24px 0 !important; }
-  .hero-figure { height: 60vw !important; min-height: 280px !important; max-height: 420px !important; }
-  .resume-grid { grid-template-columns: 1fr !important; }
-  .book-grid { grid-template-columns: 1fr !important; }
-  .footer-grid { grid-template-columns: 1fr 1fr !important; }
+/* Portrait orientation — show rotate prompt, hide content */
+@media (orientation: portrait) {
+  #root { display: none; }
+  #rotate-prompt { display: flex; }
+}
+
+/* Landscape orientation — hide prompt, show content */
+@media (orientation: landscape) {
+  #root { display: block; }
+  #rotate-prompt { display: none; }
+}
+
+#rotate-prompt {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: #061326;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  font-family: 'Geist', 'Inter', sans-serif;
+  color: #f5f0e8;
+  text-align: center;
+  padding: 40px;
+  z-index: 9999;
+}
+
+#rotate-prompt svg {
+  opacity: 0.7;
+  animation: rotate-hint 2s ease-in-out infinite;
+}
+
+#rotate-prompt p {
+  font-size: 1.1rem;
+  opacity: 0.7;
+  line-height: 1.6;
+  max-width: 260px;
+  margin: 0;
+}
+
+@keyframes rotate-hint {
+  0%, 100% { transform: rotate(0deg); }
+  40% { transform: rotate(90deg); }
+  60% { transform: rotate(90deg); }
 }
   </style>
 
@@ -144,6 +183,13 @@ a.link:hover { border-bottom-color: var(--ink); }
   <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 </head>
 <body>
+  <div id="rotate-prompt">
+    <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#ffa45a" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="4" y="2" width="16" height="20" rx="2"/>
+      <path d="M8 22h8"/>
+    </svg>
+    <p>Rotate your device for the best experience</p>
+  </div>
   <div id="root"></div>
 
   <!-- ── shared: icons, hooks, data ── -->
