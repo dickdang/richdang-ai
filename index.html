@@ -691,6 +691,108 @@ function AnimatedCount({ target }) {
   return val;
 }
 
+// Funnel hole positions on left/right walls of the trapezoid M5,10 L28,54 L36,54 L59,10
+const FUNNEL_HOLES = [
+  { cx: 52, cy: 22, dx:  5, delay: 0.0  },  // right wall, upper
+  { cx: 11, cy: 24, dx: -5, delay: 0.5  },  // left wall, upper
+  { cx: 48, cy: 31, dx:  4, delay: 1.0  },  // right wall, mid-upper
+  { cx: 16, cy: 32, dx: -4, delay: 1.5  },  // left wall, mid-upper
+  { cx: 44, cy: 40, dx:  4, delay: 0.3  },  // right wall, mid
+  { cx: 20, cy: 40, dx: -4, delay: 0.8  },  // left wall, mid
+  { cx: 40, cy: 47, dx:  3, delay: 1.2  },  // right wall, lower
+  { cx: 24, cy: 47, dx: -3, delay: 0.6  },  // left wall, lower
+  { cx: 32, cy: 52, dx:  0, delay: 1.8  },  // near spout
+];
+
+function LeakingFunnel({ holeCount = 0, accent = '#ffa45a' }) {
+  const visible = FUNNEL_HOLES.slice(0, holeCount);
+  return (
+    <svg width="68" height="82" viewBox="0 0 68 82" fill="none" xmlns="http://www.w3.org/2000/svg"
+         aria-hidden="true" style={{ flexShrink: 0, opacity: 0.93 }}>
+      <defs>
+        <linearGradient id="fGrad" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#1e3a5f"/>
+          <stop offset="100%" stopColor="#0d2240"/>
+        </linearGradient>
+        <linearGradient id="fLiquid" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#ffa45a" stopOpacity="0.5"/>
+          <stop offset="100%" stopColor="#c97a2a" stopOpacity="0.28"/>
+        </linearGradient>
+        <radialGradient id="fDrop" cx="38%" cy="28%" r="60%">
+          <stop offset="0%" stopColor="#ffd08a"/>
+          <stop offset="100%" stopColor="#c97a2a"/>
+        </radialGradient>
+        <clipPath id="fClip">
+          <path d="M5,10 L28,54 L36,54 L59,10 Z"/>
+        </clipPath>
+        <style>{`
+          @keyframes fDrip {
+            0%   { transform: translateY(0px) scaleY(0.5); opacity: 0; }
+            12%  { opacity: 1; }
+            72%  { transform: translateY(20px) scaleY(1.5); opacity: 0.85; }
+            100% { transform: translateY(27px) scaleY(0.3); opacity: 0; }
+          }
+          @keyframes fSpout {
+            0%   { transform: translateY(0px) scaleY(0.6); opacity: 0; }
+            15%  { opacity: 0.9; }
+            75%  { transform: translateY(14px) scaleY(1.6); opacity: 0.8; }
+            100% { transform: translateY(20px) scaleY(0.3); opacity: 0; }
+          }
+          @keyframes fPulse {
+            0%, 100% { filter: drop-shadow(0 0 4px rgba(255,164,90,0.2)); }
+            50%       { filter: drop-shadow(0 0 10px rgba(255,164,90,0.48)); }
+          }
+          .f-body { animation: fPulse 3s ease-in-out infinite; }
+        `}</style>
+      </defs>
+
+      <g className="f-body">
+        {/* Funnel body — wide top, narrow bottom */}
+        <path d="M5,10 L28,54 L36,54 L59,10 Z"
+              fill="url(#fGrad)" stroke="rgba(255,164,90,0.32)" strokeWidth="1.5"/>
+
+        {/* Top rim ellipse */}
+        <ellipse cx="32" cy="10" rx="27" ry="3.5"
+                 fill="url(#fGrad)" stroke="rgba(255,200,120,0.52)" strokeWidth="1.5"/>
+
+        {/* Liquid fill (clipped inside funnel) */}
+        <g clipPath="url(#fClip)">
+          <rect x="0" y="26" width="64" height="30" fill="url(#fLiquid)"/>
+          <ellipse cx="32" cy="26" rx="22" ry="2.2" fill="rgba(255,180,90,0.18)"/>
+        </g>
+
+        {/* Spout */}
+        <rect x="28" y="54" width="8" height="15"
+              fill="url(#fGrad)" stroke="rgba(255,164,90,0.28)" strokeWidth="1.2"/>
+
+        {/* Spout drip — always animates */}
+        <ellipse cx="32" cy="70" rx="2.5" ry="3.5" fill="url(#fDrop)"
+                 style={{ animation: 'fSpout 1.9s ease-in 0.2s infinite',
+                          transformBox: 'fill-box', transformOrigin: 'center top' }}/>
+
+        {/* Puddle */}
+        <ellipse cx="32" cy="79" rx="9" ry="2.2" fill="rgba(255,164,90,0.13)"/>
+      </g>
+
+      {/* Dynamic holes + drips — one per selected symptom */}
+      {visible.map((h, i) => (
+        <g key={i}>
+          <ellipse cx={h.cx} cy={h.cy} rx="2.8" ry="1.9"
+                   fill="#061326" stroke={accent} strokeWidth="1" opacity="0.92"/>
+          <ellipse cx={h.cx + h.dx * 0.4} cy={h.cy + 3} rx="1.9" ry="2.8"
+                   fill="url(#fDrop)"
+                   style={{
+                     animation: `fDrip 2.2s ease-in ${h.delay}s infinite`,
+                     transformBox: 'fill-box', transformOrigin: 'center top',
+                   }}/>
+          <ellipse cx={h.cx + h.dx} cy={h.cy + 26} rx="4" ry="1.2"
+                   fill="rgba(255,164,90,0.09)"/>
+        </g>
+      ))}
+    </svg>
+  );
+}
+
 function RevenueLeakDetector({ accent = '#ffa45a' }) {
   const [selected, setSelected] = React.useState(new Set());
   const [comments, setComments] = React.useState({});
@@ -797,107 +899,8 @@ function RevenueLeakDetector({ accent = '#ffa45a' }) {
             Revenue Leak <em style={{ color: 'var(--ink-dim)' }}>AI.</em>
           </h2>
 
-          {/* Animated leaking bucket */}
-          <svg width="64" height="72" viewBox="0 0 64 72" fill="none" xmlns="http://www.w3.org/2000/svg"
-               aria-hidden="true" style={{ flexShrink: 0, opacity: 0.92 }}>
-            <defs>
-              {/* Amber glow filter */}
-              <filter id="bucketGlow" x="-30%" y="-30%" width="160%" height="160%">
-                <feGaussianBlur stdDeviation="2.5" result="blur"/>
-                <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-              </filter>
-
-              {/* Drop gradient */}
-              <radialGradient id="dropGrad" cx="40%" cy="30%" r="60%">
-                <stop offset="0%" stopColor="#ffd08a"/>
-                <stop offset="100%" stopColor="#c97a2a"/>
-              </radialGradient>
-
-              {/* Bucket body gradient */}
-              <linearGradient id="bucketGrad" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor="#1e3a5f"/>
-                <stop offset="100%" stopColor="#0d2240"/>
-              </linearGradient>
-
-              {/* Liquid gradient */}
-              <linearGradient id="liquidGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#ffa45a" stopOpacity="0.55"/>
-                <stop offset="100%" stopColor="#c97a2a" stopOpacity="0.35"/>
-              </linearGradient>
-
-              <style>{`
-                @keyframes drip1 {
-                  0%   { transform: translateY(0px) scaleY(0.6); opacity: 0; }
-                  15%  { opacity: 1; }
-                  70%  { transform: translateY(22px) scaleY(1.4); opacity: 0.9; }
-                  100% { transform: translateY(30px) scaleY(0.5); opacity: 0; }
-                }
-                @keyframes drip2 {
-                  0%   { transform: translateY(0px) scaleY(0.5); opacity: 0; }
-                  20%  { opacity: 1; }
-                  65%  { transform: translateY(18px) scaleY(1.3); opacity: 0.8; }
-                  100% { transform: translateY(26px) scaleY(0.4); opacity: 0; }
-                }
-                @keyframes drip3 {
-                  0%   { transform: translateY(0px) scaleY(0.4); opacity: 0; }
-                  25%  { opacity: 0.9; }
-                  60%  { transform: translateY(20px) scaleY(1.2); opacity: 0.7; }
-                  100% { transform: translateY(28px) scaleY(0.3); opacity: 0; }
-                }
-                @keyframes liquidSlosh {
-                  0%, 100% { d: path("M14 34 Q32 31 50 34 L48 48 Q32 51 16 48 Z"); }
-                  50%       { d: path("M14 34 Q32 37 50 34 L48 48 Q32 45 16 48 Z"); }
-                }
-                @keyframes bucketPulse {
-                  0%, 100% { filter: drop-shadow(0 0 4px rgba(255,164,90,0.25)); }
-                  50%       { filter: drop-shadow(0 0 10px rgba(255,164,90,0.45)); }
-                }
-                .bucket-body { animation: bucketPulse 3s ease-in-out infinite; }
-                .drip-1 { animation: drip1 2.1s ease-in infinite; transform-origin: center top; }
-                .drip-2 { animation: drip2 2.1s ease-in 0.7s infinite; transform-origin: center top; }
-                .drip-3 { animation: drip3 2.1s ease-in 1.4s infinite; transform-origin: center top; }
-              `}</style>
-            </defs>
-
-            {/* Bucket group */}
-            <g className="bucket-body">
-              {/* Handle */}
-              <path d="M22 10 Q32 4 42 10" stroke="rgba(255,164,90,0.5)" strokeWidth="2.5" strokeLinecap="round" fill="none"/>
-
-              {/* Bucket trapezoid body */}
-              <path d="M14 14 L18 54 Q32 58 46 54 L50 14 Z" fill="url(#bucketGrad)" stroke="rgba(255,164,90,0.35)" strokeWidth="1.5"/>
-
-              {/* Rim highlight */}
-              <path d="M14 14 Q32 10 50 14" stroke="rgba(255,200,120,0.55)" strokeWidth="2" strokeLinecap="round" fill="none"/>
-
-              {/* Liquid inside */}
-              <clipPath id="bucketClip">
-                <path d="M15 15 L19 53 Q32 57 45 53 L49 15 Z"/>
-              </clipPath>
-              <g clipPath="url(#bucketClip)">
-                <rect x="14" y="34" width="36" height="20" fill="url(#liquidGrad)"/>
-                {/* Liquid surface shimmer */}
-                <ellipse cx="32" cy="34" rx="18" ry="2.5" fill="rgba(255,180,90,0.22)"/>
-              </g>
-
-              {/* Hole on side */}
-              <ellipse cx="46" cy="42" rx="3" ry="2" fill="#061326" stroke="rgba(255,164,90,0.6)" strokeWidth="1"/>
-            </g>
-
-            {/* Drips from hole — staggered */}
-            <g transform="translate(46, 44)">
-              <ellipse className="drip-1" cx="0" cy="0" rx="2.2" ry="3" fill="url(#dropGrad)"/>
-            </g>
-            <g transform="translate(47, 44)">
-              <ellipse className="drip-2" cx="0" cy="0" rx="1.8" ry="2.5" fill="url(#dropGrad)"/>
-            </g>
-            <g transform="translate(45, 44)">
-              <ellipse className="drip-3" cx="0" cy="0" rx="1.5" ry="2" fill="url(#dropGrad)"/>
-            </g>
-
-            {/* Splat puddle at bottom */}
-            <ellipse cx="48" cy="68" rx="7" ry="2" fill="rgba(255,164,90,0.18)"/>
-          </svg>
+          {/* Leaking funnel — holes grow with each selected symptom */}
+          <LeakingFunnel holeCount={selected.size} accent={accent} />
         </FadeUp>
 
         <FadeUp delay={200} style={{ fontSize: 17, color: 'var(--ink-dim)', maxWidth: 560, lineHeight: 1.65, margin: 0 }}>
